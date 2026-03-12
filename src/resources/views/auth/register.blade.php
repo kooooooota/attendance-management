@@ -10,7 +10,7 @@
   <form class="register-form__form" action="/register" method="post" novalidate>
     @csrf
     <div class="register-form__group">
-      <label class="register-form__label" for="name">ユーザー名</label>
+      <label class="register-form__label" for="name">名前</label>
       <input class="register-form__input" type="text" name="name" value="{{ old('name') }}" />
       <p class="register-form__error-message">
         @error('name')
@@ -37,7 +37,7 @@
       </p>
     </div>
     <div class="register-form__group">
-      <label class="register-form__label" for="password_confirmation">確認用パスワード</label>
+      <label class="register-form__label" for="password_confirmation">パスワード確認</label>
       <input class="register-form__input" type="password" name="password_confirmation" />
       <p class="register-form__error-message">
         @error('password_confirmation')

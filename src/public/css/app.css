@@ -1,0 +1,44 @@
+.header {
+    background: #000;
+}
+
+.header__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 70px;
+    /* padding: 0 15px; */
+}
+
+.header__logo-img {
+    height: 30px;
+    width: auto;
+    margin-left: 15px;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.menu ul {
+    display: flex;
+}
+
+.menu__logout-button,
+.menu__attendance-link,
+.menu__list-link,
+.menu__request-link {
+    margin-right: 30px;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: bold;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    min-width: 5em;
+    text-align: center;
+}
