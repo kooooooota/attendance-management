@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BreakTime extends Model
+class AttendanceRequest extends Model
 {
     use HasFactory;
 
@@ -18,8 +18,13 @@ class BreakTime extends Model
         return $this->belongsTo(Attendance::class);
     }
 
-    protected $casts = [
-        'punched_in_at' => 'datetime',
-        'punched_out_at' => 'datetime',
-    ];
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function breakTimeRequests()
+    {
+        return $this->hasMany(BreakTimeRequest::class);
+    }
 }

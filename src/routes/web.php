@@ -15,8 +15,11 @@ use App\Http\Controllers\AttendanceController;
 */
 
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendances.index');
+    Route::get('/attendance', [AttendanceController::class, 'timeStamp'])->name('attendances.time_stamp');
     Route::post('/attendance', [AttendanceController::class, 'punch'])->name('attendances.punch');
+    Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendances.list');
+    Route::get('/attendance/detail/{id}', [AttendanceController::class, 'show'])->name('attendances.show');
+    Route::post('/attendance/detail/{id}', [AttendanceController::class, 'storeRequest'])->name('attendances.attendance_request');
 
 });
 Route::get('/email/verify', function () {

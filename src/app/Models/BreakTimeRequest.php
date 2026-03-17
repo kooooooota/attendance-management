@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class CorrectBreakTime extends Model
+class BreakTimeRequest extends Model
 {
     use HasFactory;
-
     protected $guarded = [
         'id',
     ];
 
-    public function request()
+    public function attendanceRequest()
     {
-        return $this->belongsTo(Request::class);
+        return $this->belongsTo(AttendanceRequest::class);
     }
 }

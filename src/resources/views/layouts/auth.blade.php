@@ -16,12 +16,12 @@
     <div class="header__inner">
     @auth
       @if(auth()->user()->hasVerifiedEmail())
-        <a class="header__logo" href="/attendance"><img class="header__logo-img" src="{{ asset('images/header_logo.png') }}" alt="サイトロゴ"></a>
+        <a class="header__logo" href="/attendance"><img class="header__logo-img" src="{{ asset('images/header-logo.png') }}" alt="サイトロゴ"></a>
       @else
-        <img class="header__logo-img" src="{{ asset('images/header_logo.png') }}" alt="サイトロゴ">
+        <img class="header__logo-img" src="{{ asset('images/header-logo.png') }}" alt="サイトロゴ">
       @endif
     @else
-      <a class="header__logo" href="/attendance"><img class="header__logo-img" src="{{ asset('images/header_logo.png') }}" alt="サイトロゴ"></a>
+      <a class="header__logo" href="/attendance"><img class="header__logo-img" src="{{ asset('images/header-logo.png') }}" alt="サイトロゴ"></a>
     @endauth
     </div>
   </header>
