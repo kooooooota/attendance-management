@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
+use App\Http\Requests\AttendanceCorrectRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -100,7 +101,7 @@ class AttendanceController extends Controller
         return view('attendances.show', compact('attendance'));
     }
 
-    public function storeRequest(Request $request, $id)
+    public function storeRequest(AttendanceCorrectRequest $request, $id)
     {
         $attendance = Attendance::findOrFail($id);
         $date = $attendance->work_date->format('Y-m-d');
