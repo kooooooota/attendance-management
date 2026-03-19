@@ -16,4 +16,9 @@ class BreakTimeRequest extends Model
     {
         return $this->belongsTo(AttendanceRequest::class);
     }
+
+    protected $casts = [
+        'punched_in_at' => 'datetime',
+        'punched_out_at' => 'datetime',
+    ];
 }

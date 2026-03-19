@@ -98,7 +98,11 @@ class AttendanceController extends Controller
             abort(403);
         }
 
-        return view('attendances.show', compact('attendance'));
+        $pendingRequest = AttendanceRequest::where('attendance_id', $id)
+                            ->where('status', 'pending')
+                            ->first();
+
+        return view('attendances.show', compact('attendance', 'pendingRequest'));
     }
 
     public function storeRequest(AttendanceCorrectRequest $request, $id)
@@ -137,5 +141,10 @@ class AttendanceController extends Controller
 
         return redirect()->route('attendances.show', $id)->with('success', '修正申請を送信しました');
 
+    }
+
+    public function requestList()
+    {
+        return view('requests.index');
     }
 }

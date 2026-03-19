@@ -27,4 +27,9 @@ class AttendanceRequest extends Model
     {
         return $this->hasMany(BreakTimeRequest::class);
     }
+
+    protected $casts = [
+        'punched_in_at' => 'datetime',
+        'punched_out_at' => 'datetime',
+    ];
 }

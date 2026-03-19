@@ -20,7 +20,7 @@ class CreateAttendanceRequestsTable extends Migration
             $table->timestamp('punched_in_at')->nullable();
             $table->timestamp('punched_out_at')->nullable();
             $table->string('remarks')->nullable();
-            $table->boolean('approved')->default(false);
+            $table->string('status')->default('pending');
             $table->timestamps();
         });
     }

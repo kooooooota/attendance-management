@@ -25,3 +25,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
+Route::get('/stamp_correction_request/list', [AttendanceController::class, 'requestList'])->middleware(['auth', 'verified'])->name('attendances.request_list');
