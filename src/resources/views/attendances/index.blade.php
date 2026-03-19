@@ -62,8 +62,6 @@
                     <td>
                         @if($attendance)
                             <a class="td-detail" href="{{ route('attendances.show', ['id' => $attendance->id]) }}">詳細</a>
-                        @else
-                            <span class="td-detail">詳細</span>
                         @endif
                     </td>
                 </tr>
