@@ -19,10 +19,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/attendance', [AttendanceController::class, 'punch'])->name('attendances.punch');
     Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendances.list');
     Route::get('/attendance/detail/{id}', [AttendanceController::class, 'show'])->name('attendances.show');
-    Route::post('/attendance/detail/{id}', [AttendanceController::class, 'storeRequest'])->name('attendances.attendance_request');
+    Route::post('/attendance/detail/{id}', [AttendanceController::class, 'storeRequest'])->name('attendances.request');
 
 });
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
-Route::get('/stamp_correction_request/list', [AttendanceController::class, 'requestList'])->middleware(['auth', 'verified'])->name('attendances.request_list');
+Route::get('/stamp_correction_request/list', [AttendanceController::class, 'requestList'])->middleware(['auth', 'verified'])->name('requests.index');

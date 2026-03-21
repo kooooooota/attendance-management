@@ -114,14 +114,18 @@ body {
 
 table {
     width: 100%;
-    table-layout: fixed;
-    border-radius: 10px;
-    border-collapse: separate;
-    border-spacing: 0;
+    /* table-layout: fixed; */
+    /* border-collapse: separate;
+    border-spacing: 0; */
     border-radius: 10px;
     overflow: hidden;
     margin-top: 20px;
     text-align: center;
+}
+
+tr:last-child td,
+tr:last-child th {
+    border-bottom: none;
 }
 
 td {
@@ -142,7 +146,7 @@ th {
 }
 
 th:first-child {
-    width: 15vw;
+    width: 12vw;
 }
 
 .td-detail {

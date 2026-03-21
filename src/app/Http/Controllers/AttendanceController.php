@@ -143,8 +143,14 @@ class AttendanceController extends Controller
 
     }
 
-    public function requestList()
+    public function requestList(Request $request)
     {
-        return view('requests.index');
+        $currentTab = $request->query('tab', 'pending');
+        $requests = AttendanceRequest::with('user', 'attendance')
+            ->where('status', $currentTab)
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        return view('requests.index', compact('requests', 'currentTab'));
     }
 }
