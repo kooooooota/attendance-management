@@ -14,29 +14,41 @@
 <body>
   <header class="header">
     <div class="header__inner">
-      <a class="header__logo" href="/attendance"><img class="header__logo-img" src="{{ asset('images/header-logo.png') }}" alt="サイトロゴ"></a>
+      <a class="header__logo" href="{{ Auth::user()->is_admin ? route('admins.attendances.index') : route('attendances.time_stamp') }}"><img class="header__logo-img" src="{{ asset('images/header-logo.png') }}" alt="サイトロゴ"></a>
       
       <div class="menu">
         <ul>
-          @if(Auth::user()->isPunchedOutToday())
-          <li><a class="menu__list-link" href="/attendance/list">今月の出勤一覧</a></li>
-          <li><a class="menu__request-link" href="/stamp_correction_request/list">申請一覧</a></li>
-          <li>
-            <form class="menu__logout" action="/logout" method="post">
-              @csrf
-              <button class="menu__logout-button" type="submit">ログアウト</button>
-            </form>
-          </li>
+          @if(Auth::user()->is_admin)
+            <li><a class="menu__list-link" href="{{ route('admins.attendances.index') }}">勤怠一覧</a></li>
+            <li><a class="menu__attendance-link" href="{{ route('admins.users.index') }}">スタッフ一覧</a></li>
+            <li><a class="menu__request-link" href="/stamp_correction_request/list">申請一覧</a></li>
+            <li>
+                <form class="menu__logout" action="/logout" method="post">
+                @csrf
+                <button class="menu__logout-button" type="submit">ログアウト</button>
+                </form>
+            </li>
           @else
-          <li><a class="menu__attendance-link" href="/attendance">勤怠</a></li>
-          <li><a class="menu__list-link" href="/attendance/list">勤怠一覧</a></li>
-          <li><a class="menu__request-link" href="/stamp_correction_request/list">申請</a></li>
-          <li>
-            <form class="menu__logout" action="/logout" method="post">
-              @csrf
-              <button class="menu__logout-button" type="submit">ログアウト</button>
-            </form>
-          </li>
+            @if(Auth::user()->isPunchedOutToday())
+            <li><a class="menu__list-link" href="/attendance/list">今月の出勤一覧</a></li>
+            <li><a class="menu__request-link" href="/stamp_correction_request/list">申請一覧</a></li>
+            <li>
+              <form class="menu__logout" action="/logout" method="post">
+                @csrf
+                <button class="menu__logout-button" type="submit">ログアウト</button>
+              </form>
+            </li>
+            @else
+            <li><a class="menu__attendance-link" href="/attendance">勤怠</a></li>
+            <li><a class="menu__list-link" href="/attendance/list">勤怠一覧</a></li>
+            <li><a class="menu__request-link" href="/stamp_correction_request/list">申請</a></li>
+            <li>
+              <form class="menu__logout" action="/logout" method="post">
+                @csrf
+                <button class="menu__logout-button" type="submit">ログアウト</button>
+              </form>
+            </li>
+            @endif
           @endif
         </ul>
       </div>

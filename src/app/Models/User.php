@@ -61,4 +61,9 @@ class User extends Authenticatable implements MustVerifyEmail
 
             return $todayAttendance && $todayAttendance->punched_out_at;
     }
+
+    public function isAdmin()
+    {
+        return $this->is_admin;
+    }
 }

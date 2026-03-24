@@ -13,21 +13,21 @@
 <div class="request-form">
     <h1 class="main-title">勤怠詳細</h1>
     @php
-        $breakCount = $attendance->breakTimes->count();
+        $breakCount = $attendanceRequest->breakTimeRequests?->count() ?? 0;
     @endphp
-    <form class="request-form__form" action="{{ Auth::user()->is_admin ? route('admins.attendances.update', $attendance->id) : route('attendances.request', $attendance->id) }}" method="post">
+    <form class="request-form__form" action="{{ route('admins.requests.approval', $attendanceRequest->id) }}" method="post">
         @csrf
         <table>
             <tr>
                 <th>名前</th>
-                <td class="name">{{ $attendance->user->name }}</td>
+                <td class="name">{{ $attendanceRequest->user->name }}</td>
                 <td colspan="2"></td>
             </tr>
             <tr>
                 <th>日付</th>
-                <td>{{ $attendance->work_date->format('Y年') }}</td>
+                <td>{{ $attendanceRequest->attendance?->work_date?->format('Y年') }}</td>
                 <td></td>
-                <td>{{ $attendance->work_date->format('m月d日') }}</td>
+                <td>{{ $attendanceRequest->attendance?->work_date?->format('m月d日') }}</td>
             </tr>
             <tr>
                 <th>出勤・退勤</th>
@@ -37,11 +37,11 @@
                     <td>{{ $pendingRequest->punched_out_at->format('H:i') }}</td>
                 @else
                 <td>
-                    <input class="attendance-input" type="time" name="punched_in_at" value="{{ old('punched_in_at', $attendance->punched_in_at ? $attendance->punched_in_at->format('H:i') : '') }}">
+                    <input class="attendance-input" type="time" name="punched_in_at" value="{{ old('punched_in_at', $attendanceRequest->punched_in_at ? $attendanceRequest->punched_in_at->format('H:i') : '') }}">
                 </td>
                 <td>～</td>
                 <td>
-                    <input class="attendance-input" type="time" name="punched_out_at" value="{{ old('punched_out_at', $attendance->punched_out_at ? $attendance->punched_out_at->format('H:i') : '') }}">
+                    <input class="attendance-input" type="time" name="punched_out_at" value="{{ old('punched_out_at', $attendanceRequest->punched_out_at ? $attendanceRequest->punched_out_at->format('H:i') : '') }}">
                 </td>
                 @endif
             </tr>
@@ -64,7 +64,7 @@
                     </tr>
                 @endforeach
             @else
-                @foreach($attendance->breakTimes as $index => $bt)
+                @foreach($attendanceRequest->breakTimeRequests as $index => $bt)
                     <tr>
                         <input type="hidden" name="breaks[{{ $index }}][id]" value="{{ $bt->id }}">
                         <th>休憩 {{ $index === 0 ? '' : $index + 1 }}</th>
@@ -121,7 +121,7 @@
                     @if($pendingRequest)
                         {{ $pendingRequest->remarks }}
                     @else
-                    <textarea name="remarks">{{ old('remarks', $attendance->remarks) }}</textarea>
+                    <textarea name="remarks">{{ old('remarks', $attendanceRequest->remarks) }}</textarea>
                     @endif
                 </td>
             </tr>
@@ -137,7 +137,7 @@
         @if($pendingRequest)
             <div class="request-form__form-pending">*承認待ちのため修正はできません。</div>
         @else
-            <button class="request-form__form-button" type="submit">修正</button>
+            <button class="request-form__form-button" type="submit">承認</button>
         @endif
     </form>
 </div>

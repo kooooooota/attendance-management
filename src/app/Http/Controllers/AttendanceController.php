@@ -6,8 +6,8 @@ use App\Models\Attendance;
 use App\Models\AttendanceRequest;
 use App\Http\Requests\AttendanceCorrectRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 class AttendanceController extends Controller
 {
@@ -119,7 +119,7 @@ class AttendanceController extends Controller
             'punched_in_at' => $request_in,
             'punched_out_at' => $request_out,
             'remarks' => $request->remarks,
-            'approved' => false,
+            'status' => 'pending',
         ]);
 
         if ($request->has('breaks')) {
@@ -147,6 +147,7 @@ class AttendanceController extends Controller
     {
         $currentTab = $request->query('tab', 'pending');
         $requests = AttendanceRequest::with('user', 'attendance')
+            ->where('user_id', Auth::id())
             ->where('status', $currentTab)
             ->orderBy('created_at', 'desc')
             ->get();

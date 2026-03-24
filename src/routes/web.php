@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,3 +27,16 @@ Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
 Route::get('/stamp_correction_request/list', [AttendanceController::class, 'requestList'])->middleware(['auth', 'verified'])->name('requests.index');
+Route::get('/admin/login', function () {
+    return view('admins.auth.login');
+});
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index'])->name('admins.attendances.index');
+    Route::get('/admin/attendance/{id}', [AdminAttendanceController::class, 'show'])->name('admins.attendances.show');
+    Route::post('/admin/attendance/{id}', [AdminAttendanceController::class, 'update'])->name('admins.attendances.update');
+    Route::get('/admin/staff/list', [AdminAttendanceController::class, 'usersIndex'])->name('admins.users.index');
+    Route::get('/admin/attendance/staff/{id}', [AdminAttendanceController::class, 'usersShow'])->name('admins.users.show');
+    Route::get('/stamp_correction_request/list', [AdminAttendanceController::class, 'requestsIndex'])->name('admins.requests.index');
+    Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminAttendanceController::class, 'requestsShow'])->name('admins.requests.show');
+    Route::post('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminAttendanceController::class, 'appoval'])->name('admins.requests.approval');
+});

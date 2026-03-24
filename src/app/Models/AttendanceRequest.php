@@ -29,6 +29,7 @@ class AttendanceRequest extends Model
     }
 
     protected $casts = [
+        'work_date' => 'date',
         'punched_in_at' => 'datetime',
         'punched_out_at' => 'datetime',
     ];
