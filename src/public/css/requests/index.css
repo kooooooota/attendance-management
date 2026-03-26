@@ -42,8 +42,8 @@ body {
 table {
     width: 100%;
     /* table-layout: fixed; */
-    /* border-collapse: separate;
-    border-spacing: 0; */
+    /* border-collapse: separate; */
+    /* border-spacing: 0; */
     border-radius: 10px;
     overflow: hidden;
     margin-top: 20px;
@@ -62,7 +62,7 @@ td {
     color: #737373;
     font-weight: bold;
     letter-spacing: 0.1em;
-    min-width: 100px;
+    min-width: 40px;
 }
 
 th {
@@ -79,3 +79,12 @@ th {
     text-decoration: none;
 }
 
+@media screen and (max-width: 850px) {
+    .request-list {
+            margin: 8vh 10vw;
+        }
+    
+    th,td {
+        letter-spacing: 0;
+    }
+}

@@ -117,11 +117,11 @@
             @endif
             <tr>
                 <th>備考</th>
-                <td class="remarks-input" colspan="3">
+                <td class="remarks" colspan="3">
                     @if($pendingRequest)
                         {{ $pendingRequest->remarks }}
                     @else
-                    <textarea name="remarks">{{ old('remarks', $attendance->remarks) }}</textarea>
+                    <textarea class="remarks-input" name="remarks">{{ old('remarks', $attendance->remarks) }}</textarea>
                     @endif
                 </td>
             </tr>

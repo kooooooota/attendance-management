@@ -32,37 +32,37 @@
             <tr>
                 <th>出勤・退勤</th>
                 <td>
-                    <input class="attendance-input" type="time" name="punched_in_at" value="{{ old('punched_in_at', $attendanceRequest->punched_in_at ? $attendanceRequest->punched_in_at->format('H:i') : '') }}" readonly>
+                    <input class="attendance-input__readonly" type="time" name="punched_in_at" value="{{ old('punched_in_at', $attendanceRequest->punched_in_at ? $attendanceRequest->punched_in_at->format('H:i') : '') }}" readonly>
                 </td>
                 <td>～</td>
                 <td>
-                    <input class="attendance-input" type="time" name="punched_out_at" value="{{ old('punched_out_at', $attendanceRequest->punched_out_at ? $attendanceRequest->punched_out_at->format('H:i') : '') }}" readonly>
+                    <input class="attendance-input__readonly" type="time" name="punched_out_at" value="{{ old('punched_out_at', $attendanceRequest->punched_out_at ? $attendanceRequest->punched_out_at->format('H:i') : '') }}" readonly>
                 </td>
             </tr>
             @foreach($attendanceRequest->breakTimeRequests as $index => $bt)
                 <tr>
                     <input type="hidden" name="breaks[{{ $index }}][id]" value="{{ $bt->id }}">
                     <th>休憩 {{ $index === 0 ? '' : $index + 1 }}</th>
-                    <td><input class="attendance-input" type="time" name="breaks[{{ $index }}][punched_in_at]" value="{{ old("breaks.$index.punched_in_at", $bt->punched_in_at ? $bt->punched_in_at->format('H:i') : '') }}" readonly></td>
+                    <td><input class="attendance-input__readonly" type="time" name="breaks[{{ $index }}][punched_in_at]" value="{{ old("breaks.$index.punched_in_at", $bt->punched_in_at ? $bt->punched_in_at->format('H:i') : '') }}" readonly></td>
                     <td>～</td>
-                    <td><input class="attendance-input" type="time" name="breaks[{{ $index }}][punched_out_at]" value="{{ old("breaks.$index.punched_out_at", $bt->punched_out_at ? $bt->punched_out_at->format('H:i') : '') }}" readonly></td>
+                    <td><input class="attendance-input__readonly" type="time" name="breaks[{{ $index }}][punched_out_at]" value="{{ old("breaks.$index.punched_out_at", $bt->punched_out_at ? $bt->punched_out_at->format('H:i') : '') }}" readonly></td>
                 </tr>
             @endforeach
             <tr>
                 <th>休憩 {{ $breakCount === 0 ? '' : $breakCount + 1 }}</th>
-                <td><input class="attendance-input" type="time" name="breaks[{{ $breakCount }}][punched_in_at]" value="{{ old("breaks.$breakCount.punched_in_at") }}" readonly></td>
-                <td>～</td>
-                <td><input class="attendance-input" type="time" name="breaks[{{ $breakCount }}][punched_out_at]" value="{{ old("breaks.$breakCount.punched_out_at") }}" readonly></td>
+                <td></td>
+                <td></td>
+                <td></td>
             </tr>
             <tr>
                 <th>備考</th>
-                <td class="remarks-input" colspan="3">
-                    <textarea name="remarks" readonly>{{ old('remarks', $attendanceRequest->remarks) }}</textarea>
+                <td class="remarks" colspan="3">
+                    <textarea class="remarks-input__readonly" name="remarks" readonly>{{ old('remarks', $attendanceRequest->remarks) }}</textarea>
                 </td>
             </tr>
         </table>
             @if($attendanceRequest->status === 'approved')
-            <button class="request-form__form-button" type="submit" disabled>承認済み</button>
+            <button class="request-form__approved-button" type="submit" disabled>承認済み</button>
             @else
             <button class="request-form__form-button" type="submit">承認</button>
             @endif

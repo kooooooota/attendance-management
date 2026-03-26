@@ -42,7 +42,6 @@ tr:last-child th {
 }
 
 td {
-    /* width: 50px; */
     background-color: #ffffff;
     border: none;
     border-bottom: 3px solid#f0eff2;
@@ -67,7 +66,8 @@ textarea {
     height: 5lh;
 }
 
-.attendance-input {
+.attendance-input,
+.attendance-input__readonly {
     padding: 3px 0;
     font-size: 16px;
     font-weight: bold;
@@ -76,7 +76,12 @@ textarea {
     text-align: center;
 }
 
-.attendance-input::-webkit-calendar-picker-indicator {
+.attendance-input__readonly {
+    border: none;
+}
+
+.attendance-input::-webkit-calendar-picker-indicator,
+.attendance-input__readonly::-webkit-calendar-picker-indicator {
     display: none;
 }
 
@@ -95,8 +100,19 @@ td:nth-of-type(2) {
     width: 5vw;
 }
 
-.remarks-input {
+.remarks {
     padding-right: 12vw;
+}
+
+.remarks-input,
+.remarks-input__readonly {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.remarks-input__readonly {
+    padding-left: 3vw;
+    border: none;
 }
 
 td.name {
@@ -104,21 +120,25 @@ td.name {
     text-align: right;
 }
 
-/* td.date-y {
-    padding-left: 5vw;
-    text-align: right;
-}
-
-td.date-md {
-    padding-right: 5vw;
-    text-align: left;
-} */
-
 .request-form__form-button {
     background-color: #000000;
     color: #ffffff;
     margin: 3vh 0;
-    width: 9vw;
+    width: 15vw;
+    height: 5vh;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.request-form__approved-button {
+    background-color: #696969;
+    color: #ffffff;
+    margin: 3vh 0;
+    width: 15vw;
     height: 5vh;
     font-size: 20px;
     font-weight: bold;
@@ -147,13 +167,18 @@ td.form__error {
 }
 
 @media screen and (max-width: 850px) {
+
+    .request-form {
+            margin: 8vh 10vw;
+        }
+
     th {
         padding: 30px 0 30px 30px;
         width: 9vw;
     }
 
     td:nth-of-type(1) {
-        /* width: 5vw; */
+        width: 5vw;
         padding: 30px 0 30px 30px;
     }
 
@@ -162,7 +187,7 @@ td.form__error {
     }
 
     td:nth-of-type(3) {
-        /* width: 5vw; */
+        width: 5vw;
         padding: 30px 30px 30px 0;
     }
 
@@ -171,8 +196,13 @@ td.form__error {
         text-align: right;
     }
 
-    td.remarks-input {
+    td.remarks {
         padding-right: 30px;
+    }
+
+    .remarks-input__readonly {
+        padding-left: 7vw;
+        border: none;
     }
 
     td.form__error,
