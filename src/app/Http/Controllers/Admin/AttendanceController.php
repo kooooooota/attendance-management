@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\AttendanceRequest;
-use App\Models\user;
+use App\Models\User;
 use App\Http\Requests\AttendanceCorrectRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -114,10 +114,45 @@ class AttendanceController extends Controller
     {
         $attendanceRequest = AttendanceRequest::with(['user', 'breakTimeRequests'])->findOrFail($id);
 
-        $pendingRequest = AttendanceRequest::where('id', $id)
-                            ->where('status', 'pending')
-                            ->first();
+        return view('admins.requests.show', compact('attendanceRequest'));
+    }
 
-        return view('admins.requests.show', compact('attendanceRequest', 'pendingRequest'));
+    public function approval(Request $request, $id)
+    {
+        $attendanceRequest = AttendanceRequest::with('attendance')->findOrFail($id);
+
+        $attendanceRequest->update([
+            'status' => 'approved',
+        ]);
+
+        $attendance = $attendanceRequest->attendance;
+
+        $date = Carbon::parse($attendance->work_date)->format('Y-m-d');
+
+            DB::transaction(function () use ($request, $attendance, $date) {
+                $attendance->update([
+                    'punched_in_at' => $request->punched_in_at,
+                    'punched_out_at' => $request->punched_out_at,
+                ]);
+
+                $attendance->breakTimes()->delete();
+
+                if ($request->has('breaks')) {
+                    foreach ($request->breaks as $break) {
+                        if (!empty($break['punched_in_at']) && !empty($break['punched_out_at'])) {
+
+                            $break_in = $break['punched_in_at'] ? Carbon::parse("$date {$break['punched_in_at']}") : null;
+                            $break_out = $break['punched_out_at'] ? Carbon::parse("$date {$break['punched_out_at']}") : null;
+
+                            $attendance->breakTimes()->create([
+                                'punched_in_at' => $break_in,
+                                'punched_out_at' => $break_out,
+                            ]);
+                        }
+                    }
+                }
+            });
+
+            return redirect()->route('admins.requests.show', $id)->with('success', '修正申請を承認しました');
     }
 }

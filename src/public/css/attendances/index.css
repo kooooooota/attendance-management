@@ -123,8 +123,7 @@ table {
     text-align: center;
 }
 
-tr:last-child td,
-tr:last-child th {
+tr:last-child td {
     border-bottom: none;
 }
 
@@ -140,7 +139,7 @@ td {
 th {
     background-color: #ffffff;
     border: none;
-    border-bottom: 4px solid#f0eff2;
+    border-bottom: 4px solid #f0eff2;
     padding: 10px 0;
     color: #737373;
 }

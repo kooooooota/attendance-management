@@ -24,9 +24,9 @@ class Attendance extends Model
         return $this->hasMany(BreakTime::class);
     }
 
-    public function request()
+    public function attendanceRequest()
     {
-        return $this->belongsTo(Request::class);
+        return $this->belongsTo(AttendanceRequest::class);
     }
 
     public function getTotalBreakMinutes()
