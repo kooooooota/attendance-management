@@ -145,6 +145,18 @@ class AttendanceController extends Controller
 
     public function requestList(Request $request)
     {
+        $user = auth()->user();
+        
+        if ($user->is_admin) {
+            $currentTab = $request->query('tab', 'pending');
+            $requests = AttendanceRequest::with('user', 'attendance')
+                ->where('status', $currentTab)
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            return view('admins.requests.index', compact('requests', 'currentTab'));
+        }
+
         $currentTab = $request->query('tab', 'pending');
         $requests = AttendanceRequest::with('user', 'attendance')
             ->where('user_id', Auth::id())

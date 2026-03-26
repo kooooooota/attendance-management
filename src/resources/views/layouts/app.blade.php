@@ -30,7 +30,7 @@
             </li>
           @else
             @if(Auth::user()->isPunchedOutToday())
-            <li><a class="menu__list-link" href="/attendance/list">今月の出勤一覧</a></li>
+            <li><a class="menu__list-link" href="{{ route('attendances.list') }}">今月の出勤一覧</a></li>
             <li><a class="menu__request-link" href="/stamp_correction_request/list">申請一覧</a></li>
             <li>
               <form class="menu__logout" action="/logout" method="post">
@@ -39,8 +39,8 @@
               </form>
             </li>
             @else
-            <li><a class="menu__attendance-link" href="/attendance">勤怠</a></li>
-            <li><a class="menu__list-link" href="/attendance/list">勤怠一覧</a></li>
+            <li><a class="menu__attendance-link" href="{{ route('attendances.time_stamp') }}">勤怠</a></li>
+            <li><a class="menu__list-link" href="{{ route('attendances.list') }}">勤怠一覧</a></li>
             <li><a class="menu__request-link" href="/stamp_correction_request/list">申請</a></li>
             <li>
               <form class="menu__logout" action="/logout" method="post">

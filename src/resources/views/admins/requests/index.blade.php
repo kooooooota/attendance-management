@@ -8,8 +8,8 @@
 <div class="request-list">
     <h1 class="main-title">申請一覧</h1>
     <div class="request-list__tab">
-        <a class="request-list__tab-link {{ $currentTab === 'pending' ? 'active' : '' }}" href="{{ route('admins.requests.index', ['tab' => 'pending']) }}">承認待ち</a>
-        <a class="request-list__tab-link {{ $currentTab === 'approved' ? 'active' : '' }}" href="{{ route('admins.requests.index', ['tab' => 'approved']) }}">承認済み</a>
+        <a class="request-list__tab-link {{ $currentTab === 'pending' ? 'active' : '' }}" href="{{ route('requests.index', ['tab' => 'pending']) }}">承認待ち</a>
+        <a class="request-list__tab-link {{ $currentTab === 'approved' ? 'active' : '' }}" href="{{ route('requests.index', ['tab' => 'approved']) }}">承認済み</a>
     </div>
     @if($requests->isNotEmpty())
         <table>
