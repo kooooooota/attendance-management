@@ -18,14 +18,16 @@
             </tr>
         </thead>
         <tbody>
-           @foreach($users as $user)
-            <tr>
-                <td>{{ $user->name }}</td>
-                <td>{{ $user->email }}</td>
-                <td>
-                    <a class="td-detail" href="{{ route('admins.users.show', $user->id) }}">詳細</a>
-                </td>
-            </tr>
+            @foreach($users as $user)
+                @if(!$user->is_admin)
+                <tr>
+                    <td>{{ $user->name }}</td>
+                    <td>{{ $user->email }}</td>
+                    <td>
+                        <a class="td-detail" href="{{ route('admins.users.show', $user->id) }}">詳細</a>
+                    </td>
+                </tr>
+                @endif
             @endforeach
         </tbody>
     </table>

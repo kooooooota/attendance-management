@@ -15,18 +15,10 @@ use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController
 |
 */
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/attendance', [AttendanceController::class, 'timeStamp'])->name('attendances.time_stamp');
-    Route::post('/attendance', [AttendanceController::class, 'punch'])->name('attendances.punch');
-    Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendances.list');
-    Route::get('/attendance/detail/{id}', [AttendanceController::class, 'show'])->name('attendances.show');
-    Route::post('/attendance/detail/{id}', [AttendanceController::class, 'storeRequest'])->name('attendances.request');
-
-});
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
-Route::get('/stamp_correction_request/list', [AttendanceController::class, 'requestList'])->middleware(['auth', 'verified'])->name('requests.index');
+
 Route::get('/admin/login', function () {
     return view('admins.auth.login');
 });
@@ -39,5 +31,15 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminAttendanceController::class, 'requestsShow'])->name('admins.requests.show');
     Route::post('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminAttendanceController::class, 'approval'])->name('admins.requests.approval');
 });
+Route::get('/stamp_correction_request/list', [AdminAttendanceController::class, 'requestsIndex'])->middleware(['admin'])->name('admins.requests.index');
 
-// Route::get('/stamp_correction_request/list', [AdminAttendanceController::class, 'requestsIndex'])->name('admins.requests.index');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/attendance', [AttendanceController::class, 'timeStamp'])->name('attendances.time_stamp');
+    Route::post('/attendance', [AttendanceController::class, 'punch'])->name('attendances.punch');
+    Route::get('/attendance/list', [AttendanceController::class, 'list'])->name('attendances.list');
+    Route::get('/attendance/detail/{id}', [AttendanceController::class, 'show'])->name('attendances.show');
+    Route::post('/attendance/detail/{id}', [AttendanceController::class, 'storeRequest'])->name('attendances.request');
+});
+Route::get('/stamp_correction_request/list', [AttendanceController::class, 'requestList'])->middleware(['auth', 'verified'])->name('requests.index');
+
+
