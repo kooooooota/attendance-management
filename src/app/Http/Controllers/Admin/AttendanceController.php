@@ -155,4 +155,39 @@ class AttendanceController extends Controller
 
             return redirect()->route('admins.requests.show', $id)->with('success', '修正申請を承認しました');
     }
+
+    public function exportCsv($id)
+    {
+        $user = User::findOrFail($id);
+
+        $attendances = Attendance::where('user_id', $user->id)->get();
+
+        $fileName = 'users_' . date('Ymd') . '.csv';
+
+        $headers = [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => "attachment; filename=\"$fileName\"",
+        ];
+
+        return response()->streamDownload(function () use ($attendances) {
+            $stream = fopen('php://output', 'w');
+
+            stream_filter_prepend($stream, 'convert.iconv.utf-8/cp932//TRANSLIT');
+
+            fputcsv($stream, ['日付', '出勤', '退勤', '休憩', '合計', '詳細']);
+
+            foreach ($attendances as $attendance) {
+                fputcsv($stream, [
+                    $attendance->work_date->format('m/d'),
+                    $attendance?->punched_in_at ? $attendance->punched_in_at->format('H:i') : '',
+                    $attendance?->punched_out_at ? $attendance->punched_out_at->format('H:i') : '',
+                    $attendance->getBreakTimeDisplay(),
+                    $attendance->getWorkTimeDisplay(),
+                    $attendance ? '詳細' : '',
+                ]);
+            }
+
+            fclose($stream);
+        }, $fileName, $headers);
+    }
 }

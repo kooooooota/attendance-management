@@ -42,4 +42,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 Route::get('/stamp_correction_request/list', [AttendanceController::class, 'requestList'])->middleware(['auth', 'verified'])->name('requests.index');
 
+Route::get('/export-csv/{id}', [AdminAttendanceController::class, 'exportCsv'])->name('csv.export');
+
 

@@ -155,6 +155,27 @@ th {
     text-decoration: none;
 }
 
+.btn {
+    text-align: right;
+}
+
+.btn-export {
+    display: inline-block;
+    text-align: center;
+    background-color: #000000;
+    color: #ffffff;
+    text-decoration: none;
+    width: 150px;
+    height: 5vh;
+    padding: 10px 25px;
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0.2em;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 5vh;
+}
+
 @media screen and (max-width: 850px) {
     .attendance-list {
         margin: 8vh 10vw;

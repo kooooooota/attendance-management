@@ -68,7 +68,9 @@
             @endfor
         </tbody>
     </table>
-
+    <div class="btn">
+        <a class="btn-export" href="{{ route('csv.export', ['id' => $user->id]) }}">CSV出力</a>
+    </div>
 </div>
 
 @endsection
