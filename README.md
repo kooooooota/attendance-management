@@ -41,11 +41,16 @@ php artisan migrate
 ```bash
 php artisan db:seed  
 ```
-## 管理者ユーザーログイン情報
-以下の情報で管理者でログイン可能です。  
+## テスト用ログイン情報
+以下の情報で管理者、一般ユーザーそれぞれログイン可能です。  
 (シーディング実行後に有効になります。)  
+### 管理者ユーザー
 - 名前: Admin User
 - Email: ```admin@example.com```
+- password: ```password```
+### 一般ユーザー
+- 名前: General User
+- Email: ```general@example.com```
 - password: ```password```
 ## テスト実行方法
 1. テスト用データベースを準備する  

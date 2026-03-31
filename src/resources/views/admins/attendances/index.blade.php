@@ -20,9 +20,9 @@
             <div class="select-month">
                 <img class="select-month__img" src="{{ asset('images/calender-icon.png') }}" alt="カレンダー">
                 <span class="select-month__text">
-                    {{ $displayDate->format('Y年m月d日') }}
+                    {{ $displayDate->format('Y/m/d') }}
                 </span>
-                <input class="select-month__input" type="date" name="month" value="{{ $displayDate->toDateString() }}" 
+                <input class="select-month__input" type="date" name="date" value="{{ $displayDate->toDateString() }}" 
                        onchange="this.form.submit()"> {{-- ここだけ1行JS。変更時に自動送信 --}}
             </div>
         </form>
@@ -47,19 +47,21 @@
             </tr>
         </thead>
         <tbody>
-           @foreach($attendances as $attendance)
-            <tr>
-                <td>{{ $attendance?->user->name }}</td>
-                <td>{{ $attendance?->punched_in_at?->format('H:i') }}</td>
-                <td>{{ $attendance?->punched_out_at?->format('H:i') }}</td>
-                <td>{{ $attendance ? $attendance->getBreakTimeDisplay() : ''}}</td>
-                <td>{{ $attendance ? $attendance->getWorkTimeDisplay() : ''}}</td>
-                <td>
-                    @if($attendance)
-                        <a class="td-detail" href="{{ route('admins.attendances.show', ['id' => $attendance->id]) }}">詳細</a>
-                    @endif
-                </td>
-            </tr>
+            @foreach($attendances as $attendance)
+                @unless($attendance->user->is_admin)
+                    <tr>
+                        <td>{{ $attendance?->user->name }}</td>
+                        <td>{{ $attendance?->punched_in_at?->format('H:i') }}</td>
+                        <td>{{ $attendance?->punched_out_at?->format('H:i') }}</td>
+                        <td>{{ $attendance ? $attendance->getBreakTimeDisplay() : ''}}</td>
+                        <td>{{ $attendance ? $attendance->getWorkTimeDisplay() : ''}}</td>
+                        <td>
+                            @if($attendance)
+                                <a class="td-detail" href="{{ route('admins.attendances.show', ['id' => $attendance->id]) }}">詳細</a>
+                            @endif
+                        </td>
+                    </tr>
+                @endunless
             @endforeach
         </tbody>
     </table>

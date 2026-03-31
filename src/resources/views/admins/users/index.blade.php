@@ -19,7 +19,7 @@
         </thead>
         <tbody>
             @foreach($users as $user)
-                @if(!$user->is_admin)
+                @unless($user->is_admin)
                 <tr>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
@@ -27,7 +27,7 @@
                         <a class="td-detail" href="{{ route('admins.users.show', $user->id) }}">詳細</a>
                     </td>
                 </tr>
-                @endif
+                @endunless
             @endforeach
         </tbody>
     </table>

@@ -22,6 +22,13 @@ class UsersTableSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        User::factory()->count(2)->create();
+        User::factory()->create([
+            'name' => 'General User',
+            'email' => 'general@example.com',
+            'is_admin' => false,
+            'password' => Hash::make('password'),
+        ]);
+
+        User::factory()->count(6)->create();
     }
 }
