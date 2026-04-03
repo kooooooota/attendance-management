@@ -44,6 +44,9 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         Fortify::loginView(function () {
+            if (request()->is('admin/*')) {
+                return view('admins.auth.login');
+            }
             return view('auth.login');
         });
 

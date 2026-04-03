@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Admin\AttendanceController as AdminAttendanceController;
+use Laravel\Fortify\Http\Controllers\AuthenticatedSessionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +20,12 @@ Route::get('/email/verify', function () {
     return view('auth.verify-email');
 })->middleware('auth')->name('verification.notice');
 
-Route::get('/admin/login', function () {
-    return view('admins.auth.login');
-});
+Route::get('/admin/login', [AuthenticatedSessionController::class, 'create'])
+    ->middleware(['guest:admin'])
+    ->name('admin.login');
+Route::post('/admin/login', [AuthenticatedSessionController::class, 'store'])
+    ->middleware(['guest:admin'])
+    ->name('admin.login');
 
 Route::get('/export-csv/{id}', [AdminAttendanceController::class, 'exportCsv'])->name('csv.export');
 

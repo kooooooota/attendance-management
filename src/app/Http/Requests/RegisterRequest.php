@@ -53,7 +53,7 @@ class RegisterRequest extends FormRequest
             'name.required' => 'お名前を入力してください',
             'name.string' => 'お名前は文字で入力してください',
             'name.max' => 'お名前は255文字以下で入力してください',
-            'email.required' => 'メールアドレスを入力してくださ',
+            'email.required' => 'メールアドレスを入力してください',
             'email.string' => 'メールアドレスは文字で入力してください',
             'email.email' => 'メール形式で入力してください',
             'email.max' => 'メールアドレスは255文字以下で入力してください',
