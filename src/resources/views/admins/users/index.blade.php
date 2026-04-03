@@ -3,9 +3,6 @@
 @section('css')
 <link rel="stylesheet" href="{{ asset('css/attendances/index.css') }}">
 @endsection
-
-@section('content')
-
 @section('content')
 <div class="attendance-list">
     <h1 class="main-title">スタッフ一覧</h1>
@@ -31,7 +28,5 @@
             @endforeach
         </tbody>
     </table>
-
 </div>
-
 @endsection

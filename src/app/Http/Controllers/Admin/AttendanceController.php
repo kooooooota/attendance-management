@@ -156,13 +156,18 @@ class AttendanceController extends Controller
             return redirect()->route('admins.requests.show', $id)->with('success', '修正申請を承認しました');
     }
 
-    public function exportCsv($id)
+    public function exportCsv(Request $request, $id)
     {
         $user = User::findOrFail($id);
 
-        $attendances = Attendance::where('user_id', $user->id)->get();
+        $targetMonth = $request->input('month', date('Y-m'));
 
-        $fileName = 'users_' . date('Ymd') . '.csv';
+        $attendances = Attendance::where('user_id', $user->id)
+                                ->where('work_date', 'like', "{$targetMonth}%")
+                                ->orderBy('work_date', 'asc')
+                                ->get();
+
+        $fileName = "attendance_{$id}_{$targetMonth}.csv";
 
         $headers = [
             'Content-Type' => 'text/csv',

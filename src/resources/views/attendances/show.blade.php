@@ -32,9 +32,9 @@
             <tr>
                 <th>出勤・退勤</th>
                 @if($pendingRequest)
-                    <td>{{ $pendingRequest->punched_in_at->format('H:i') }}</td>
+                    <td>{{ $pendingRequest->punched_in_at?->format('H:i') }}</td>
                     <td>～</td>
-                    <td>{{ $pendingRequest->punched_out_at->format('H:i') }}</td>
+                    <td>{{ $pendingRequest->punched_out_at?->format('H:i') }}</td>
                 @else
                 <td>
                     <input class="attendance-input" type="time" name="punched_in_at" value="{{ old('punched_in_at', $attendance->punched_in_at ? $attendance->punched_in_at->format('H:i') : '') }}">
@@ -58,9 +58,9 @@
                 @foreach($pendingRequest->breakTimeRequests as $index => $br)
                     <tr>
                         <th>休憩 {{ $index + 1 }}</th>
-                        <td>{{ $br->punched_in_at->format('H:i') }}</td>
+                        <td>{{ $br->punched_in_at?->format('H:i') }}</td>
                         <td>～</td>
-                        <td>{{ $br->punched_out_at->format('H:i') }}</td>
+                        <td>{{ $br->punched_out_at?->format('H:i') }}</td>
                     </tr>
                 @endforeach
             @else

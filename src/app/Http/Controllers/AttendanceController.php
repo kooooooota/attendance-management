@@ -14,13 +14,25 @@ class AttendanceController extends Controller
     public function timeStamp()
     {
         $user = Auth::user();
-        $today = Carbon::today()->toDateString();
+        $now = Carbon::now();
 
         $attendance = Attendance::where('user_id', $user->id)
-                                ->where('work_date', $today)
+                                ->whereNull('punched_out_at')
                                 ->first();
 
-        return view('attendances.time-stamp', compact('attendance'));
+        $isBreaking = false;
+        $alreadyFinishedToday = false;
+
+        if ($attendance) {
+            $isBreaking = $attendance->breakTimes()->whereNull('punched_out_at')->exists();
+        } else {
+            $alreadyFinishedToday = Attendance::where('user_id', $user->id)
+                                            ->where('work_date', $now->toDateString())
+                                            ->whereNotNull('punched_out_at')
+                                            ->exists();
+        }
+
+        return view('attendances.time-stamp', compact('attendance', 'isBreaking', 'alreadyFinishedToday'));
     }
 
     public function punch(Request $request)
@@ -29,41 +41,40 @@ class AttendanceController extends Controller
         $now = Carbon::now();
         $today = $now->toDateString();
 
-        $attendance = Attendance::firstOrNew([
-            'user_id' => $user->id,
-            'work_date' => $today,
-        ]);
-
-        $msg = null;
-
         if ($request->type === 'in') {
-            if ($attendance->punched_in_at) return back()->with('error', '出勤済みです');
-            $attendance->punched_in_at = $now;
-        } elseif ($request->type === 'break_in') {
-            $attendance->breakTimes()->create([
+            $todayAttendance = Attendance::where('user_id', $user->id)
+                                        ->where('work_date', $now->toDateString())
+                                        ->first();
+            
+            if ($todayAttendance) return back()->with('error', '本日は出勤済みです');
+
+            $attendance = new Attendance([
+                'user_id' => $user->id,
+                'work_date' => $now->toDateString(),
                 'punched_in_at' => $now,
             ]);
-        } elseif ($request->type === 'break_out') {
-            $latestBreak = $attendance->breakTimes()
-                ->whereNull('punched_out_at')
-                ->latest()
-                ->first();
-            if (!$latestBreak) {
-                return back()->with('error', '休憩が開始されていません');
-            }
-            $latestBreak->update([
-                'punched_out_at' => $now,
-            ]);
-        } else {
-            if (!$attendance->punched_in_at || $attendance->punched_out_at) return back()->with('error', '不正な操作です');
-            $attendance->punched_out_at = $now;
-            $msg = "お疲れ様でした。";
+            $attendance->save();
+            return back();
         }
 
-        $attendance->save();
+        $attendance = Attendance::where('user_id', $user->id)
+                                ->whereNull('punched_out_at')
+                                ->latest('work_date')
+                                ->first();
 
-        if ($msg) {
-            return back()->with('success', $msg);
+        if (!$attendance) return back()->with('error', '出勤データが見つかりません');
+
+        if ($request->type === 'break_in') {
+            $attendance->breakTimes()->create(['punched_in_at' => $now]);
+            return back();
+        } elseif ($request->type === 'break_out') {
+            $latestBreak = $attendance->breakTimes()->whereNull('punched_out_at')->latest()->first();
+            if (!$latestBreak) return bach()->with('error', '休憩が開始されていません');
+            $latestBreak->update(['punched_out_at' => $now]);
+            return back();
+        } elseif ($request->type === 'out') {
+            $attendance->update(['punched_out_at' => $now]);
+            return back()->with('success', 'お疲れ様でした。');
         }
 
         return back();
@@ -111,7 +122,15 @@ class AttendanceController extends Controller
         $date = $attendance->work_date->format('Y-m-d');
 
         $request_in = $request->punched_in_at ? Carbon::parse("$date {$request->punched_in_at}") : null;
-        $request_out = $request->punched_out_at ? Carbon::parse("$date {$request->punched_out_at}") : null;
+        $request_out = null;
+
+        if ($request->punched_out_at) {
+            $request_out = Carbon::parse("$date {$request->punched_out_at}");
+
+            if ($request_in && $request_out->lt($request_in)) {
+                $request_out->addDay();
+            }
+        }
 
         $attendanceRequest = AttendanceRequest::create([
             'attendance_id' => $attendance->id,
@@ -128,6 +147,14 @@ class AttendanceController extends Controller
 
                     $break_in = $breakData['punched_in_at'] ? Carbon::parse("$date {$breakData['punched_in_at']}") : null;
                     $break_out = $breakData['punched_out_at'] ? Carbon::parse("$date {$breakData['punched_out_at']}") : null;
+
+                    if ($break_in && $request_in && $break_in->lt($request_in)) {
+                        $break_in->addDay();
+                    }
+
+                    if ($break_out && $break_in && $break_out->lt($break_in)) {
+                        $break_out->addDay();
+                    }
 
                     $attendanceRequest->breakTimeRequests()->create([
                         'attendance_request_id' => $attendanceRequest->id,

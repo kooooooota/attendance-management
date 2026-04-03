@@ -18,7 +18,7 @@ class AttendancesTableSeeder extends Seeder
     public function run()
     {
         User::all()->each(function ($user) {
-            for ($i = 0; $i < 60; $i++) {
+            for ($i = 1; $i < 61; $i++) {
                 $date = Carbon::now()->subDays($i);
 
                 if ($date->isWeekend()) {

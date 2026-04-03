@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="login-form">
-  <h1>管理者ログイン</h1>
+  <h1 class="login-form__heading">管理者ログイン</h1>
   <form class="login-form__form" action="/login" method="post" novalidate>
     @csrf
     <div class="login-form__group">

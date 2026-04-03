@@ -13,5 +13,4 @@
         <button class="verify-email__btn" type="submit">認証メールを再送する</button>
     </div>
 </form>
-
 @endsection

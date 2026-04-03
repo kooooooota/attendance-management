@@ -16,13 +16,13 @@
         </a>
     
         {{-- 年月選択フォーム --}}
-        <form action="{{ route('admins.users.show', ['id' => $user->id]) }}" method="GET" id="month-form">
-            <div class="select-month">
-                <img class="select-month__img" src="{{ asset('images/calender-icon.png') }}" alt="カレンダー">
-                <span class="select-month__text">
+        <form action="{{ route('admins.users.show', ['id' => $user->id]) }}" method="get" id="month-form">
+            <div class="select-date">
+                <img class="select-date__img" src="{{ asset('images/calender-icon.png') }}" alt="カレンダー">
+                <span class="select-date__text">
                     {{ $displayDate->format('Y/m') }}
                 </span>
-                <input class="select-month__input" type="month" name="month" value="{{ $displayDate->format('Y-m') }}" 
+                <input class="select-date__input" type="month" name="month" value="{{ $displayDate->format('Y-m') }}" 
                        onchange="this.form.submit()"> {{-- ここだけ1行JS。変更時に自動送信 --}}
             </div>
         </form>
@@ -69,8 +69,7 @@
         </tbody>
     </table>
     <div class="btn">
-        <a class="btn-export" href="{{ route('csv.export', ['id' => $user->id]) }}">CSV出力</a>
+        <a class="btn-export" href="{{ route('csv.export', ['id' => $user->id, 'month' => request('month')]) }}">CSV出力</a>
     </div>
 </div>
-
 @endsection

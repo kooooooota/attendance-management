@@ -16,13 +16,13 @@
         </a>
     
         {{-- 年月選択フォーム --}}
-        <form action="{{ route('admins.attendances.index') }}" method="GET" id="month-form">
-            <div class="select-month">
-                <img class="select-month__img" src="{{ asset('images/calender-icon.png') }}" alt="カレンダー">
-                <span class="select-month__text">
+        <form action="{{ route('admins.attendances.index') }}" method="get" id="month-form">
+            <div class="select-date">
+                <img class="select-date__img" src="{{ asset('images/calender-icon.png') }}" alt="カレンダー">
+                <span class="select-date__text">
                     {{ $displayDate->format('Y/m/d') }}
                 </span>
-                <input class="select-month__input" type="date" name="date" value="{{ $displayDate->toDateString() }}" 
+                <input class="select-date__input" type="date" name="date" value="{{ $displayDate->toDateString() }}" 
                        onchange="this.form.submit()"> {{-- ここだけ1行JS。変更時に自動送信 --}}
             </div>
         </form>
@@ -67,5 +67,4 @@
     </table>
 
 </div>
-
 @endsection

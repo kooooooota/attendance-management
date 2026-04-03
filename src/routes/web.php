@@ -22,6 +22,9 @@ Route::get('/email/verify', function () {
 Route::get('/admin/login', function () {
     return view('admins.auth.login');
 });
+
+Route::get('/export-csv/{id}', [AdminAttendanceController::class, 'exportCsv'])->name('csv.export');
+
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/attendance/list', [AdminAttendanceController::class, 'index'])->name('admins.attendances.index');
     Route::get('/admin/attendance/{id}', [AdminAttendanceController::class, 'show'])->name('admins.attendances.show');
@@ -42,6 +45,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 Route::get('/stamp_correction_request/list', [AttendanceController::class, 'requestList'])->middleware(['auth', 'verified'])->name('requests.index');
 
-Route::get('/export-csv/{id}', [AdminAttendanceController::class, 'exportCsv'])->name('csv.export');
 
 
