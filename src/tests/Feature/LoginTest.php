@@ -27,9 +27,13 @@ class LoginTest extends TestCase
         ];
 
         $response = $this->post('/login', $formData);
+
+        $response->assertStatus(302);
         $response->assertSessionHasErrors([
             'email' => 'メールアドレスを入力してください',
         ]);
+
+        $this->assertGuest();
     }
 
     public function test_user_login_requires_password()
@@ -42,9 +46,13 @@ class LoginTest extends TestCase
         ];
 
         $response = $this->post('/login', $formData);
+
+        $response->assertStatus(302);
         $response->assertSessionHasErrors([
             'password' => 'パスワードを入力してください',
         ]);
+
+        $this->assertGuest();
     }
 
     public function test_user_login_fails_with_invalid_email()
@@ -56,11 +64,14 @@ class LoginTest extends TestCase
             'email_verified_at' => now(),
         ]);
 
+        $this->get('/login')->assertStatus(200);
+
         $response = $this->post('/login', [
             'email' => 'wrong@example.com',
             'password' => 'password',
         ]);
 
+        $response->assertStatus(302);
         $response->assertSessionHasErrors([
             'email' => 'ログイン情報が登録されていません'
         ]);
@@ -70,32 +81,52 @@ class LoginTest extends TestCase
 
     public function test_admin_login_requires_email()
     {
-        $this->get('/admin/login')->assertStatus(200);
+        $user = User::factory()->create([
+            'name' => 'テスト 太郎',
+            'email' => 'test@example.com',
+            'is_admin' => true,
+            'password' => bcrypt('password'),
+            'email_verified_at' => now(),
+        ]);
 
-        $formData = [
+        $this->get('/login')->assertStatus(200);
+
+        $response = $this->post('/admin/login', [
             'email' => '',
             'password' => 'password',
-        ];
-
-        $response = $this->post('/admin/login', $formData);
-        $response->assertSessionHasErrors([
-            'email' => 'メールアドレスを入力してください',
         ]);
+        
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors([
+            'email' => 'メールアドレスを入力してください'
+        ]);
+
+        $this->assertGuest();
     }
 
     public function test_admin_login_requires_password()
     {
-        $this->get('/admin/login')->assertStatus(200);
+        $user = User::factory()->create([
+            'name' => 'テスト 太郎',
+            'email' => 'test@example.com',
+            'is_admin' => true,
+            'password' => bcrypt('password'),
+            'email_verified_at' => now(),
+        ]);
 
-        $formData = [
+        $this->get('/login')->assertStatus(200);
+
+        $response = $this->post('/admin/login', [
             'email' => 'test@example.com',
             'password' => '',
-        ];
-
-        $response = $this->post('/admin/login', $formData);
-        $response->assertSessionHasErrors([
-            'password' => 'パスワードを入力してください',
         ]);
+        
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors([
+            'password' => 'パスワードを入力してください'
+        ]);
+
+        $this->assertGuest();
     }
 
     public function test_admin_login_fails_with_invalid_email()
@@ -107,6 +138,8 @@ class LoginTest extends TestCase
             'password' => bcrypt('password'),
             'email_verified_at' => now(),
         ]);
+
+        $this->get('/login')->assertStatus(200);
 
         $response = $this->post('/admin/login', [
             'email' => 'wrong@example.com',
@@ -120,8 +153,4 @@ class LoginTest extends TestCase
 
         $this->assertGuest();
     }
-
-    
-
-
 }

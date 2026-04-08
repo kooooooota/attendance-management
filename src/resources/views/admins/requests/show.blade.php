@@ -27,7 +27,7 @@
                 <th>日付</th>
                 <td>{{ $attendanceRequest->attendance?->work_date?->format('Y年') }}</td>
                 <td></td>
-                <td>{{ $attendanceRequest->attendance?->work_date?->format('m月d日') }}</td>
+                <td>{{ $attendanceRequest->attendance?->work_date?->format('n月j日') }}</td>
             </tr>
             <tr>
                 <th>出勤・退勤</th>

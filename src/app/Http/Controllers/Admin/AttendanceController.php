@@ -99,16 +99,16 @@ class AttendanceController extends Controller
         return view('admins.users.show', compact('user', 'attendances', 'displayDate', 'prevMonth', 'nextMonth'));
     }
 
-    public function requestsIndex(Request $request)
-    {
-        $currentTab = $request->query('tab', 'pending');
-        $requests = AttendanceRequest::with('user', 'attendance')
-            ->where('status', $currentTab)
-            ->orderBy('created_at', 'desc')
-            ->get();
+    // public function requestsIndex(Request $request)
+    // {
+    //     $currentTab = $request->query('tab', 'pending');
+    //     $requests = AttendanceRequest::with('user', 'attendance')
+    //         ->where('status', $currentTab)
+    //         ->orderBy('created_at', 'desc')
+    //         ->get();
 
-        return view('admins.requests.index', compact('requests', 'currentTab'));
-    }
+    //     return view('admins.requests.index', compact('requests', 'currentTab'));
+    // }
 
     public function requestsShow($id)
     {

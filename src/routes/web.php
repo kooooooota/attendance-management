@@ -38,7 +38,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminAttendanceController::class, 'requestsShow'])->name('admins.requests.show');
     Route::post('/stamp_correction_request/approve/{attendance_correct_request_id}', [AdminAttendanceController::class, 'approval'])->name('admins.requests.approval');
 });
-Route::get('/stamp_correction_request/list', [AdminAttendanceController::class, 'requestsIndex'])->middleware(['admin'])->name('admins.requests.index');
+// Route::get('/stamp_correction_request/list', [AdminAttendanceController::class, 'requestsIndex'])->middleware(['admin'])->name('admins.requests.index');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/attendance', [AttendanceController::class, 'timeStamp'])->name('attendances.time_stamp');

@@ -7,19 +7,20 @@
 @section('content')
 <div class="attendance-container">
     <div class="attendance-container__status">
-        @if(!$attendance)
+        @if($alreadyFinishedToday)
+        <p>退勤済</p>
+        @elseif(!$attendance)
         <p class="status-outside">勤務外</p>
         @elseif(!$attendance->punched_out_at && !$isBreaking)
         <p>出勤中</p>
         @elseif($isBreaking)
         <p>休憩中</p>
-        @else
-        <p>退勤済</p>
+        
         @endif
     </div>
     <!-- リアルタイム時計 -->
-         <p class="attendance-container__date">{{ \Carbon\Carbon::now()->isoFormat('YYYY年MM月DD日(ddd)') }}</p>
-         <div class="attendance-container__time" id="clock">00:00:00</div>
+         <p class="attendance-container__date">{{ \Carbon\Carbon::now()->isoFormat('YYYY年M月D日(ddd)') }}</p>
+         <div class="attendance-container__time" id="clock">{{ Carbon\Carbon::now()->format('H:i') }}</div>
 
     <!-- 打刻フォーム -->
     <form class="attendance-container__btn" action="{{ route('attendances.punch') }}" method="post">
