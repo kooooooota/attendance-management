@@ -157,8 +157,10 @@ class AdminAttendanceRequestTest extends TestCase
 
         $this->get(route('requests.index', ['tab' => 'pending']))
              ->assertOk();
+
+        $savedRequest = AttendanceRequest::where('attendance_id', $attendance->id)->first();
         
-        $response = $this->get(route('admins.requests.show', $attendance->id));
+        $response = $this->get(route('admins.requests.show', $savedRequest));
         $response->assertStatus(200)
                  ->assertSee('2026年')
                  ->assertSee('4月1日')
@@ -202,12 +204,13 @@ class AdminAttendanceRequestTest extends TestCase
 
         $this->actingAs($user)
              ->post(route('attendances.request', $attendance->id), $requestData);
-       
+             
+        $savedRequest = AttendanceRequest::where('attendance_id', $attendance->id)->first();
+
         $this->actingAs($admin)
-             ->get(route('admins.requests.show', $attendance->id))
+             ->get(route('admins.requests.show', $savedRequest))
              ->assertOk();
 
-        $savedRequest = AttendanceRequest::where('attendance_id', $attendance->id)->first();
 
         $this->post(route('admins.requests.approval', $savedRequest), $requestData);
 

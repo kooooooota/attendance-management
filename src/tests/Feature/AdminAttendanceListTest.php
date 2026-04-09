@@ -73,7 +73,7 @@ class AdminAttendanceListTest extends TestCase
 
         $user = User::factory()->create();
 
-        $prevDate = now()->subDay()->startOfDay();
+        $prevDate = now()->subDay()->startOfDay()->toDateString();
 
         Attendance::create([
             'user_id' => $user->id,
@@ -101,7 +101,7 @@ class AdminAttendanceListTest extends TestCase
 
         $user = User::factory()->create();
 
-        $nextDate = now()->addDay()->startOfDay();
+        $nextDate = now()->addDay()->startOfDay()->toDateString();
 
         Attendance::create([
             'user_id' => $user->id,
