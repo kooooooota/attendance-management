@@ -217,7 +217,7 @@ class AttendanceRequestTest extends TestCase
             'remarks' => '打刻漏れ',
         ];
 
-        $response = $this->post(route('attendances.request', $attendance->id), $requestData);
+        $this->post(route('attendances.request', $attendance->id), $requestData);
 
         $admin = User::factory()->create([
             'is_admin' => true,
@@ -235,5 +235,138 @@ class AttendanceRequestTest extends TestCase
              ->assertOk()
              ->assertSee('2026年')
              ->assertSee('4月1日');
+    }
+
+    public function test_users_can_view_their_all_requests_in_the_pending_list()
+    {
+        $user = User::factory()->create();
+
+        $attendanceData = [
+            ['date' => '2026-04-01', 'in' => '09:00:00', 'out' => '18:00:00'],
+            ['date' => '2026-04-02', 'in' => '10:00:00', 'out' => '19:00:00'],
+        ];
+
+        $attendances = [];
+        foreach ($attendanceData as $data) {
+            $attendances[] = Attendance::create([
+                'user_id' => $user->id,
+                'work_date' => $data['date'],
+                'punched_in_at' => $data['date'] . ' ' . $data['in'],
+                'punched_out_at' => $data['date'] . ' ' . $data['out'],
+            ]);
+        }
+
+        $this->actingAs($user);
+
+        foreach ($attendances as $attendance) {
+            $requestData = [
+                'attendance_id' => $attendance->id,
+                'user_id' => $user->id,
+                'punched_in_at' => '09:00',
+                'punched_out_at' => '18:00',
+                'breaks' => [
+                    [
+                        'punched_in_at' => '12:00',
+                        'punched_out_at' => '13:00',
+                    ]
+                ],
+                'remarks' => '打刻漏れ',
+            ];
+
+            $this->post(route('attendances.request', $attendance->id), $requestData);
+        }
+
+        $response = $this->get(route('requests.index', ['tab' => 'pending']));
+        $response->assertStatus(200)
+                 ->assertSee('2026/04/01')
+                 ->assertSee('2026/04/02');
+    }
+
+    public function test_users_can_view_their_all_requests_in_the_approved_list()
+    {
+        $user = User::factory()->create();
+
+        $attendanceData = [
+            ['date' => '2026-04-01', 'in' => '09:00:00', 'out' => '18:00:00'],
+            ['date' => '2026-04-02', 'in' => '10:00:00', 'out' => '19:00:00'],
+        ];
+
+        $attendances = [];
+        foreach ($attendanceData as $data) {
+            $attendances[] = Attendance::create([
+                'user_id' => $user->id,
+                'work_date' => $data['date'],
+                'punched_in_at' => $data['date'] . ' ' . $data['in'],
+                'punched_out_at' => $data['date'] . ' ' . $data['out'],
+            ]);
+        }
+
+        $this->actingAs($user);
+
+        foreach ($attendances as $attendance) {
+            $requestData = [
+                'attendance_id' => $attendance->id,
+                'user_id' => $user->id,
+                'punched_in_at' => '09:00',
+                'punched_out_at' => '18:00',
+                'breaks' => [
+                    [
+                        'punched_in_at' => '12:00',
+                        'punched_out_at' => '13:00',
+                    ]
+                ],
+                'remarks' => '打刻漏れ',
+            ];
+
+            $this->post(route('attendances.request', $attendance->id), $requestData);
+
+            AttendanceRequest::where('attendance_id', $attendance->id)
+                            ->first()
+                            ->update(['status' => 'approved']);
+        }
+
+        $response = $this->get(route('requests.index', ['tab' => 'approved']));
+        $response->assertStatus(200)
+                 ->assertSee('2026/04/01')
+                 ->assertSee('2026/04/02');
+    }
+
+    public function test_users_can_view_request_details_when_click_details_button()
+    {
+        $user = User::factory()->create();
+
+        $punchIn = now()->parse('2026-04-01 09:00:00');
+
+        $this->travelTo($punchIn);
+
+        $attendance = Attendance::create([
+            'user_id' => $user->id,
+            'work_date' => now()->toDateString(),
+            'punched_in_at' => $punchIn,
+            'punched_out_at' => $punchIn->copy()->addHours(9),
+        ]);
+
+        $this->actingAs($user);
+        
+        $requestData = [
+            'attendance_id' => $attendance->id,
+            'user_id' => $user->id,
+            'punched_in_at' => '09:00',
+            'punched_out_at' => '18:00',
+            'breaks' => [
+                [
+                    'punched_in_at' => '12:00',
+                    'punched_out_at' => '13:00',
+                ]
+            ],
+            'remarks' => '打刻漏れ',
+        ];
+
+        $this->post(route('attendances.request', $attendance->id), $requestData);
+
+        $this->get(route('requests.index', ['tab' => 'pending']));
+        
+        $this->get(route('attendances.show', $attendance->id))
+             ->assertOk();
     }
 }

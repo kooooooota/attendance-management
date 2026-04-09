@@ -9,7 +9,7 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Attendance;
 
-class AttendanceListTest extends TestCase
+class AdminUsersListTest extends TestCase
 {
     /**
      * A basic feature test example.
@@ -19,55 +19,65 @@ class AttendanceListTest extends TestCase
 
     use RefreshDatabase;
 
-    public function test_users_can_view_all_their_attendance_records()
+    public function test_admin_can_view_names_and_emails_of_all_users()
     {
-        $user = User::factory()->create();
+        $admin = User::factory()->create([
+            'is_admin' => true,
+        ]);
 
-        $attendanceData = [
-            ['date' => now()->yesterday()->toDateString(), 'in' => '09:00:00', 'out' => '18:00:00'],
-            ['date' => now()->today()->toDateString(), 'in' => '10:00:00', 'out' => '19:00:00'],
-        ];
+        $users = User::factory()
+            ->count(2)
+            ->sequence(
+                [
+                    'name' => 'テスト 太郎',
+                    'email' => 'taro@example.com'
+                ],
+                [
+                    'name' => 'テスト 次郎',
+                    'email' => 'jiro@example.com'
+                ]
+            )
+            ->create();
 
-        $expectedStrings = [];
-        foreach ($attendanceData as $data) {
-            Attendance::create([
-                'user_id' => $user->id,
-                'work_date' => $data['date'],
-                'punched_in_at' => $data['date'] . ' ' . $data['in'],
-                'punched_out_at' => $data['date'] . ' ' . $data['out'],
-            ]);
+        $this->actingAs($admin);
 
-            $formattedDate = Carbon::parse($data['date'])->isoFormat('MM/DD(ddd)');
-
-            $expectedStrings[] = $formattedDate;
-            $expectedStrings[] = substr($data['in'], 0, 5);
-            $expectedStrings[] = substr($data['out'], 0, 5);
-        }
-
-        $this->actingAs($user);
-
-        $response = $this->get(route('attendances.list'));
-
+        $response = $this->get(route('admins.users.index'));
         $response->assertStatus(200)
-                 ->assertSeeInOrder($expectedStrings);
+                 ->assertSee('テスト 太郎')
+                 ->assertSee('taro@example.com')
+                 ->assertSee('テスト 次郎')
+                 ->assertSee('jiro@example.com');
     }
 
-    public function test_display_the_current_month()
+    public function test_attendance_records_is_displayed_correctly()
     {
+        $admin = User::factory()->create([
+            'is_admin' => true,
+        ]);
+
         $user = User::factory()->create();
 
-        $currentMonth = now()->format('Y/m');
+        Attendance::create([
+            'user_id' => $user->id,
+            'work_date' => now()->toDateString(),
+            'punched_in_at' => '09:00',
+            'punched_out_at' => '18:00',
+        ]);
 
-        $this->actingAs($user);
+        $this->actingAs($admin);
 
-        $response = $this->get(route('attendances.list'));
-
+        $response = $this->get(route('admins.users.show', $user->id));
         $response->assertStatus(200)
-                 ->assertSee($currentMonth);
+                 ->assertSee('09:00')
+                 ->assertSee('18:00');
     }
 
-    public function test_display_the_records_when_click_previous_month_link()
+    public function test_admin_can_view_the_users_records_when_click_previous_month_link()
     {
+        $admin = User::factory()->create([
+            'is_admin' => true,
+        ]);
+
         $user = User::factory()->create();
 
         $prevMonthFirstDay = now()->subMonth()->startOfMonth();
@@ -94,18 +104,22 @@ class AttendanceListTest extends TestCase
             $expectedStrings[] = substr($data['out'], 0, 5);
         }
 
-        $this->actingAs($user)
-             ->get(route('attendances.list'))
+        $this->actingAs($admin)
+             ->get(route('admins.users.show', $user->id))
              ->assertOk();
 
-        $response = $this->get(route('attendances.list', ['month' => $prevMonth]));
+        $response = $this->get(route('admins.users.show', ['id' => $user->id, 'month' => $prevMonth]));
 
         $response->assertStatus(200)
                  ->assertSeeInOrder($expectedStrings);
     }
 
-    public function test_display_the_records_when_click_next_month_link()
+    public function test_admin_can_view_the_users_records_when_click_next_month_link()
     {
+        $admin = User::factory()->create([
+            'is_admin' => true,
+        ]);
+
         $user = User::factory()->create();
 
         $nextMonthFirstDay = now()->addMonth()->startOfMonth();
@@ -132,38 +146,41 @@ class AttendanceListTest extends TestCase
             $expectedStrings[] = substr($data['out'], 0, 5);
         }
 
-        $this->actingAs($user)
-             ->get(route('attendances.list'))
+        $this->actingAs($admin)
+             ->get(route('admins.users.show', $user->id))
              ->assertOk();
 
-        $response = $this->get(route('attendances.list', ['month' => $nextMonth]));
+        $response = $this->get(route('admins.users.show', ['id' => $user->id, 'month' => $nextMonth]));
 
         $response->assertStatus(200)
                  ->assertSeeInOrder($expectedStrings);
     }
 
-    public function test_users_can_view_attendance_details_when_click_details_link()
+    public function test_admin_can_view_attendance_details_when_click_details_link()
     {
+        $admin = User::factory()->create([
+            'is_admin' => true,
+        ]);
+
         $user = User::factory()->create();
 
-        $punchIn = now()->parse('2026-04-01 09:00:00');
-
-        $this->travelTo($punchIn);
+        $currentYear = now()->format('Y年');
+        $currentDate = now()->format('n月j日');
 
         $attendance = Attendance::create([
             'user_id' => $user->id,
             'work_date' => now()->toDateString(),
-            'punched_in_at' => $punchIn,
-            'punched_out_at' => $punchIn->copy()->addHours(9),
+            'punched_in_at' => '09:00',
+            'punched_out_at' => '18:00',
         ]);
 
-        $this->actingAs($user)
-             ->get(route('attendances.list'))
+        $this->actingAs($admin)
+             ->get(route('admins.users.show', $user->id))
              ->assertOk();
 
-        $response = $this->get(route('attendances.show', $attendance->id));
+        $response = $this->get(route('admins.attendances.show', $attendance->id));
         $response->assertStatus(200)
-                 ->assertSee('2026年')
-                 ->assertSee('4月1日');
+                 ->assertSee($currentYear)
+                 ->assertSee($currentDate);
     }
 }

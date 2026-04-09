@@ -131,8 +131,8 @@ class AttendanceController extends Controller
 
             DB::transaction(function () use ($request, $attendance, $date) {
                 $attendance->update([
-                    'punched_in_at' => $request->punched_in_at,
-                    'punched_out_at' => $request->punched_out_at,
+                    'punched_in_at' => $date . ' ' . $request->punched_in_at,
+                    'punched_out_at' => $date . ' ' . $request->punched_out_at,
                 ]);
 
                 $attendance->breakTimes()->delete();
