@@ -57,11 +57,13 @@ class AdminUsersListTest extends TestCase
 
         $user = User::factory()->create();
 
+        $date = now()->today();
+
         Attendance::create([
             'user_id' => $user->id,
-            'work_date' => now()->toDateString(),
-            'punched_in_at' => '09:00',
-            'punched_out_at' => '18:00',
+            'work_date' => $date->toDateString(),
+            'punched_in_at' => $date->copy()->setTime(9, 0, 0),
+            'punched_out_at' => $date->copy()->setTime(18, 0, 0),
         ]);
 
         $this->actingAs($admin);
@@ -84,8 +86,8 @@ class AdminUsersListTest extends TestCase
         $prevMonth = $prevMonthFirstDay->format('Y-m');
 
         $attendanceData = [
-            ['date' => $prevMonthFirstDay->toDateString(), 'in' => '09:00:00', 'out' => '18:00:00'],
-            ['date' => $prevMonthFirstDay->copy()->addDay()->toDateString(), 'in' => '10:00:00', 'out' => '19:00:00'],
+            ['date' => $prevMonthFirstDay->toDateString(), 'in' => $prevMonthFirstDay->copy()->setTime(9, 0, 0), 'out' => $prevMonthFirstDay->copy()->setTime(18, 0, 0)],
+            ['date' => $prevMonthFirstDay->copy()->addDay()->toDateString(), 'in' => $prevMonthFirstDay->copy()->addDay()->setTime(10, 0, 0), 'out' => $prevMonthFirstDay->copy()->addDay()->setTime(19, 0, 0)],
         ];
 
         $expectedStrings = [];
@@ -93,15 +95,15 @@ class AdminUsersListTest extends TestCase
             Attendance::create([
                 'user_id' => $user->id,
                 'work_date' => $data['date'],
-                'punched_in_at' => $data['date'] . ' ' . $data['in'],
-                'punched_out_at' => $data['date'] . ' ' . $data['out'],
+                'punched_in_at' => $data['in'],
+                'punched_out_at' => $data['out'],
             ]);
 
             $formattedDate = Carbon::parse($data['date'])->isoFormat('MM/DD(ddd)');
 
             $expectedStrings[] = $formattedDate;
-            $expectedStrings[] = substr($data['in'], 0, 5);
-            $expectedStrings[] = substr($data['out'], 0, 5);
+            $expectedStrings[] = substr($data['in'], 11, 5);
+            $expectedStrings[] = substr($data['out'], 11, 5);
         }
 
         $this->actingAs($admin)
@@ -126,8 +128,8 @@ class AdminUsersListTest extends TestCase
         $nextMonth = $nextMonthFirstDay->format('Y-m');
 
         $attendanceData = [
-            ['date' => $nextMonthFirstDay->toDateString(), 'in' => '09:00:00', 'out' => '18:00:00'],
-            ['date' => $nextMonthFirstDay->copy()->addDay()->toDateString(), 'in' => '10:00:00', 'out' => '19:00:00'],
+            ['date' => $nextMonthFirstDay->toDateString(), 'in' => $nextMonthFirstDay->copy()->setTime(9, 0, 0), 'out' => $nextMonthFirstDay->copy()->setTime(18, 0, 0)],
+            ['date' => $nextMonthFirstDay->copy()->addDay()->toDateString(), 'in' => $nextMonthFirstDay->copy()->addDay()->setTime(10, 0, 0), 'out' => $nextMonthFirstDay->copy()->addDay()->setTime(19, 0, 0)],
         ];
 
         $expectedStrings = [];
@@ -135,15 +137,15 @@ class AdminUsersListTest extends TestCase
             Attendance::create([
                 'user_id' => $user->id,
                 'work_date' => $data['date'],
-                'punched_in_at' => $data['date'] . ' ' . $data['in'],
-                'punched_out_at' => $data['date'] . ' ' . $data['out'],
+                'punched_in_at' => $data['in'],
+                'punched_out_at' => $data['out'],
             ]);
 
             $formattedDate = Carbon::parse($data['date'])->isoFormat('MM/DD(ddd)');
 
             $expectedStrings[] = $formattedDate;
-            $expectedStrings[] = substr($data['in'], 0, 5);
-            $expectedStrings[] = substr($data['out'], 0, 5);
+            $expectedStrings[] = substr($data['in'], 11, 5);
+            $expectedStrings[] = substr($data['out'], 11, 5);
         }
 
         $this->actingAs($admin)
@@ -164,14 +166,16 @@ class AdminUsersListTest extends TestCase
 
         $user = User::factory()->create();
 
-        $currentYear = now()->format('Y年');
-        $currentDate = now()->format('n月j日');
+        $date = now()->today();
+
+        $currentYear = $date->format('Y年');
+        $currentDate = $date->format('n月j日');
 
         $attendance = Attendance::create([
             'user_id' => $user->id,
-            'work_date' => now()->toDateString(),
-            'punched_in_at' => '09:00',
-            'punched_out_at' => '18:00',
+            'work_date' => $date->toDateString(),
+            'punched_in_at' => $date->copy()->setTime(9, 0, 0),
+            'punched_out_at' => $date->copy()->setTime(18, 0, 0),
         ]);
 
         $this->actingAs($admin)

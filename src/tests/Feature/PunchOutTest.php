@@ -45,23 +45,25 @@ class PunchOutTest extends TestCase
 
     public function test_users_can_view_their_work_finish_times_in_the_attendance_list()
     {
-        $user = User::factory()->create();
+          $user = User::factory()->create();
 
-        $this->travelTo(now()->parse('2026-04-01 09:00:00'));
+     //    $this->travelTo(now()->parse('2026-04-01 09:00:00'));
+          $date = now()->today();
 
-        $this->actingAs($user);
+          $this->actingAs($user);
 
-        $this->post(route('attendances.punch', ['type' => 'in']))
-             ->assertStatus(302);
+          $this->travelTo($date->copy()->setTime(9, 0, 0));
+          $this->post(route('attendances.punch', ['type' => 'in']))
+               ->assertStatus(302);
 
-        $this->travelTo(now()->parse('2026-04-01 18:00:00'));
-        $this->post(route('attendances.punch', ['type' => 'out']))
-             ->assertStatus(302);
+          $this->travelTo($date->copy()->setTime(18, 0, 0));
+          $this->post(route('attendances.punch', ['type' => 'out']))
+               ->assertStatus(302);
 
-        $response = $this->get(route('attendances.list'));
-             
-        $response->assertStatus(200)
-                 ->assertSee('04/01(水)')
-                 ->assertSee('18:00');
+          $response = $this->get(route('attendances.list'));
+               
+          $response->assertStatus(200)
+                    ->assertSee($date->isoFormat('MM/DD(ddd)'))
+                    ->assertSee('18:00');
     }
 }

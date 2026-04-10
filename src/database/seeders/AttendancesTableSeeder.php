@@ -33,12 +33,14 @@ class AttendancesTableSeeder extends Seeder
 
                 $endTime = (clone $startTime)->modify('+9 hours')->modify(rand(0, 60) . ' minutes');
 
-                $attendance = Attendance::create([
-                    'user_id' => $user->id,
-                    'work_date' => $date->format('Y-m-d'),
-                    'punched_in_at' => $startTime,
-                    'punched_out_at' => $endTime,
-                ]);
+                if (!$user->is_admin) {
+                    $attendance = Attendance::create([
+                        'user_id' => $user->id,
+                        'work_date' => $date->format('Y-m-d'),
+                        'punched_in_at' => $startTime,
+                        'punched_out_at' => $endTime,
+                    ]);
+                }
 
                 
                 $breakStart = (clone $date)->setTime(12, rand(0, 15), 0);
@@ -54,12 +56,13 @@ class AttendancesTableSeeder extends Seeder
                 foreach ($break as $b) {
                     $start = $b['start'];
                     $end = (clone $start)->modify("+{$b['duration']} minutes");
-
-                    BreakTime::create([
-                        'attendance_id' => $attendance->id,
-                        'punched_in_at' => $start,
-                        'punched_out_at' => $end,
-                    ]);
+                    if (!$user->is_admin) {
+                        BreakTime::create([
+                            'attendance_id' => $attendance->id,
+                            'punched_in_at' => $start,
+                            'punched_out_at' => $end,
+                        ]);
+                    }
                 }
             }
         });

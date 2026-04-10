@@ -118,31 +118,32 @@ class BreakTimeTest extends TestCase
                  ->assertSee('休憩戻');
     }
 
-    public function test_users_can_view_their_break_times_in_the_break_time_list()
+    public function test_users_can_view_their_break_times_in_the_attendance_list()
     {
         $user = User::factory()->create();
 
-        $this->travelTo(now()->parse('2026-04-01 09:00:00'));
+        $date = now()->today();
+
         $attendance = Attendance::create([
             'user_id' => $user->id,
-            'work_date' => now()->toDateString(),
-            'punched_in_at' => now(),
+            'work_date' => $date->toDateString(),
+            'punched_in_at' => $date->copy()->setTime(9, 0, 0),
             'punched_out_at' => null,
         ]);
 
         $this->actingAs($user);
 
-        $this->travelTo(now()->parse('2026-04-01 12:00:00'));
+        $this->travelTo($date->copy()->setTime(12, 0, 0));
         $this->post(route('attendances.punch', ['type' => 'break_in']))
              ->assertStatus(302);
 
-        $this->travelTo(now()->parse('2026-04-01 13:00:00'));
+        $this->travelTo($date->copy()->setTime(13, 0, 0));
         $this->post(route('attendances.punch', ['type' => 'break_out']))
              ->assertStatus(302);             
 
         $response = $this->get(route('attendances.list'));
         $response->assertStatus(200)
-                 ->assertSee('04/01(水)')
+                 ->assertSee($date->isoFormat('MM/DD(ddd)'))
                  ->assertSee('1:00');
     }
 }

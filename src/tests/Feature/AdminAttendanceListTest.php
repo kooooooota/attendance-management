@@ -32,12 +32,14 @@ class AdminAttendanceListTest extends TestCase
             )
             ->create();
 
+        $date = now()->today();
+
         foreach ($users as $user) {
             $attendance = Attendance::create([
                 'user_id' => $user->id,
-                'work_date' => now()->today()->toDateString(),
-                'punched_in_at' => '09:00',
-                'punched_out_at' => '18:00',
+                'work_date' => $date->toDateString(),
+                'punched_in_at' => $date->copy()->setTime(9, 0, 0),
+                'punched_out_at' => $date->copy()->setTime(18, 0, 0),
             ]);
         }
 
@@ -56,7 +58,7 @@ class AdminAttendanceListTest extends TestCase
             'is_admin' => true,
         ]);
 
-        $currentDate = now()->toDateString();
+        $currentDate = now()->format('Y/m/d');
 
         $this->actingAs($admin);
 
@@ -73,20 +75,20 @@ class AdminAttendanceListTest extends TestCase
 
         $user = User::factory()->create();
 
-        $prevDate = now()->subDay()->startOfDay()->toDateString();
+        $prevDate = now()->subDay()->startOfDay();
 
         Attendance::create([
             'user_id' => $user->id,
-            'work_date' => $prevDate,
-            'punched_in_at' => '09:00',
-            'punched_out_at' => '18:00',
+            'work_date' => $prevDate->toDateString(),
+            'punched_in_at' => $prevDate->copy()->setTime(9, 0, 0),
+            'punched_out_at' => $prevDate->copy()->setTime(18, 0, 0),
         ]);
 
         $this->actingAs($admin)
              ->get(route('admins.attendances.index'))
              ->assertOk();
 
-        $response = $this->get(route('admins.attendances.index', ['date' => $prevDate]));
+        $response = $this->get(route('admins.attendances.index', ['date' => $prevDate->toDateString()]));
 
         $response->assertStatus(200)
                  ->assertSee('09:00')
@@ -101,20 +103,20 @@ class AdminAttendanceListTest extends TestCase
 
         $user = User::factory()->create();
 
-        $nextDate = now()->addDay()->startOfDay()->toDateString();
+        $nextDate = now()->addDay()->startOfDay();
 
         Attendance::create([
             'user_id' => $user->id,
-            'work_date' => $nextDate,
-            'punched_in_at' => '09:00',
-            'punched_out_at' => '18:00',
+            'work_date' => $nextDate->toDateString(),
+            'punched_in_at' => $nextDate->copy()->setTime(9, 0, 0),
+            'punched_out_at' => $nextDate->copy()->setTime(18, 0, 0),
         ]);
 
         $this->actingAs($admin)
              ->get(route('admins.attendances.index'))
              ->assertOk();
 
-        $response = $this->get(route('admins.attendances.index', ['date' => $nextDate]));
+        $response = $this->get(route('admins.attendances.index', ['date' => $nextDate->toDateString()]));
 
         $response->assertStatus(200)
                  ->assertSee('09:00')

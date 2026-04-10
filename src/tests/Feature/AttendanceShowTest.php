@@ -18,7 +18,7 @@ class AttendanceShowTest extends TestCase
 
     use RefreshDatabase;
 
-    public function test_the_name_field_on_attendance_details_screen_displays_the_logged_in_users_name()
+    public function test_the_name_field_on_attendance_details_page_displays_the_logged_in_users_name()
     {
         $user = User::factory()->create([
             'name' => 'テスト 太郎',
@@ -35,16 +35,14 @@ class AttendanceShowTest extends TestCase
             'punched_out_at' => $punchIn->copy()->addHours(9),
         ]);
 
-        $this->actingAs($user)
-             ->get(route('attendances.list'))
-             ->assertOk();
+        $this->actingAs($user);
 
         $response = $this->get(route('attendances.show', $attendance->id));
         $response->assertStatus(200)
                  ->assertSee('テスト 太郎');
     }
 
-    public function test_the_date_field_on_attendance_details_screen_displays_selected_date()
+    public function test_the_date_field_on_attendance_details_page_displays_selected_date()
     {
         $user = User::factory()->create();
 
@@ -59,9 +57,7 @@ class AttendanceShowTest extends TestCase
             'punched_out_at' => $punchIn->copy()->addHours(9),
         ]);
 
-        $this->actingAs($user)
-             ->get(route('attendances.list'))
-             ->assertOk();
+        $this->actingAs($user);
 
         $response = $this->get(route('attendances.show', $attendance->id));
         $response->assertStatus(200)
@@ -84,9 +80,7 @@ class AttendanceShowTest extends TestCase
             'punched_out_at' => $punchIn->copy()->addHours(9),
         ]);
 
-        $this->actingAs($user)
-             ->get(route('attendances.list'))
-             ->assertOk();
+        $this->actingAs($user);
 
         $response = $this->get(route('attendances.show', $attendance->id));
         $response->assertStatus(200)
@@ -113,9 +107,7 @@ class AttendanceShowTest extends TestCase
             'punched_out_at' => $punchIn->copy()->addHours(4),
         ]);
 
-        $this->actingAs($user)
-             ->get(route('attendances.list'))
-             ->assertOk();
+        $this->actingAs($user);
 
         $response = $this->get(route('attendances.show', $attendance->id));
         $response->assertStatus(200)

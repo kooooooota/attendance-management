@@ -26,12 +26,12 @@ class DateTest extends TestCase
             'email_verified_at' => now(),
         ]);
 
-        $this->travelTo(now()->parse('2026-01-01 12:00:00'));
+        $this->travelTo(now()->parse('2026-04-01 09:00:00'));
 
         $this->actingAs($user)
              ->get('/attendance')
              ->assertOk()
-             ->assertSee('2026年1月1日(木)')
-             ->assertSee('12:00');
+             ->assertSee('2026年4月1日(水)')
+             ->assertSee('09:00');
     }
 }

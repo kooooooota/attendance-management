@@ -34,9 +34,7 @@ class AttendanceRequestTest extends TestCase
             'punched_out_at' => $punchIn->copy()->addHours(9),
         ]);
 
-        $this->actingAs($user)
-             ->get(route('attendances.list'))
-             ->assertOk();
+        $this->actingAs($user);
 
         $this->get(route('attendances.show', $attendance->id))
              ->assertStatus(200);
@@ -70,9 +68,7 @@ class AttendanceRequestTest extends TestCase
             'punched_out_at' => $punchIn->copy()->addHours(9),
         ]);
 
-        $this->actingAs($user)
-             ->get(route('attendances.list'))
-             ->assertOk();
+        $this->actingAs($user);
 
         $this->get(route('attendances.show', $attendance->id))
              ->assertStatus(200);
@@ -112,9 +108,7 @@ class AttendanceRequestTest extends TestCase
             'punched_out_at' => $punchIn->copy()->addHours(9),
         ]);
 
-        $this->actingAs($user)
-             ->get(route('attendances.list'))
-             ->assertOk();
+        $this->actingAs($user);
 
         $this->get(route('attendances.show', $attendance->id))
              ->assertStatus(200);
@@ -154,9 +148,7 @@ class AttendanceRequestTest extends TestCase
             'punched_out_at' => $punchIn->copy()->addHours(9),
         ]);
 
-        $this->actingAs($user)
-             ->get(route('attendances.list'))
-             ->assertOk();
+        $this->actingAs($user);
 
         $this->get(route('attendances.show', $attendance->id))
              ->assertStatus(200);
@@ -196,9 +188,7 @@ class AttendanceRequestTest extends TestCase
             'punched_out_at' => $punchIn->copy()->addHours(9),
         ]);
 
-        $this->actingAs($user)
-             ->get(route('attendances.list'))
-             ->assertOk();
+        $this->actingAs($user);
 
         $this->get(route('attendances.show', $attendance->id))
              ->assertStatus(200);
@@ -331,7 +321,7 @@ class AttendanceRequestTest extends TestCase
                  ->assertSee('2026/04/02');
     }
 
-    public function test_users_can_view_request_details_when_click_details_button()
+    public function test_users_can_view_request_details_when_click_details_link()
     {
         $user = User::factory()->create();
 

@@ -32,12 +32,14 @@ class AdminAttendanceShowTest extends TestCase
             )
             ->create();
 
+        $date = now()->today();
+
         foreach ($users as $user) {
             $attendance = Attendance::create([
                 'user_id' => $user->id,
-                'work_date' => now()->today()->toDateString(),
-                'punched_in_at' => '09:00',
-                'punched_out_at' => '18:00',
+                'work_date' => $date->toDateString(),
+                'punched_in_at' => $date->copy()->setTime(9, 0, 0),
+                'punched_out_at' => $date->copy()->setTime(18, 0, 0),
             ]);
         }
 
