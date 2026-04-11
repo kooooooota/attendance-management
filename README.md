@@ -1,17 +1,18 @@
 # attendance-management（勤怠管理アプリ）
 ## プロジェクト概要
 本アプリは、Laravelフレームワークを使用した、勤怠管理アプリです。
-### 主な機能（一般ユーザー）
+### 主な機能  
+#### （一般ユーザー）
 - 出勤、退勤、休憩時間の打刻
 - 勤怠修正申請（勤怠記録のある日付のみ勤怠一覧の詳細リンクより可能）
 - 勤怠、申請の一覧表示
-### 主な機能（管理者ユーザー）
+#### （管理者ユーザー）
 - 勤怠、スタッフ、申請の一覧表示
 - 一般ユーザーによる勤怠修正申請に対する承認
 - 勤怠の修正
 ## 環境構築
 ### Dockerビルド
-1. ```git@github.com:kooooooota/attendance-management.git```
+1. ```git clone git@github.com:kooooooota/attendance-management.git```
 2. DockerDesktopアプリを立ち上げる
 3. ```docker-compose up -d --build```
 ### Laravel環境構築
@@ -45,10 +46,12 @@ php artisan db:seed
 以下の情報で管理者、一般ユーザーそれぞれログイン可能です。  
 (シーディング実行後に有効になります。)  
 ### 管理者ユーザー
+- ログインURL: ```/admin/login```
 - 名前: Admin User
 - Email: ```admin@example.com```
 - password: ```password```
 ### 一般ユーザー
+- ログインURL: ```/login```
 - 名前: General User
 - Email: ```general@example.com```
 - password: ```password```
