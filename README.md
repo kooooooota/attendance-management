@@ -10,6 +10,7 @@
 - 勤怠、スタッフ、申請の一覧表示
 - 一般ユーザーによる勤怠修正申請に対する承認
 - 勤怠の修正
+- スタッフ別、月次勤怠一覧のCSV出力
 ## 環境構築
 ### Dockerビルド
 1. ```git clone git@github.com:kooooooota/attendance-management.git```
