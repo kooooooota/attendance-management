@@ -114,9 +114,6 @@ body {
 
 table {
     width: 100%;
-    /* table-layout: fixed; */
-    /* border-collapse: separate;
-    border-spacing: 0; */
     border-radius: 10px;
     overflow: hidden;
     margin-top: 5vh;
@@ -145,10 +142,6 @@ th {
     color: #737373;
     letter-spacing: 0.1em;
 }
-
-/* th:first-child {
-    width: 12vw;
-} */
 
 .td-detail {
     color: #000000;

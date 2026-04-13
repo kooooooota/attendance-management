@@ -5,17 +5,18 @@
 @endsection
 
 @section('content')
+@if (session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
 <div class="attendance-list">
     <h1 class="main-title">{{ $displayDate->format('Y年m月d日') }}の勤怠</h1>
     <div class="calendar-nav">
-        
-        {{-- 前日リンク --}}
         <a class="link-prev" href="{{ route('admins.attendances.index', ['date' => $prevDate]) }}">
             <img class="link-prev__img" src="{{ asset('images/arrow-left.png') }}" alt="前日">
             <span class="link-prev__text">前日</span>
         </a>
-    
-        {{-- 年月選択フォーム --}}
         <form action="{{ route('admins.attendances.index') }}" method="get" id="month-form">
             <div class="select-date">
                 <img class="select-date__img" src="{{ asset('images/calender-icon.png') }}" alt="カレンダー">
@@ -23,18 +24,14 @@
                     {{ $displayDate->format('Y/m/d') }}
                 </span>
                 <input class="select-date__input" type="date" name="date" value="{{ $displayDate->toDateString() }}" 
-                       onchange="this.form.submit()"> {{-- ここだけ1行JS。変更時に自動送信 --}}
+                       onchange="this.form.submit()">
             </div>
         </form>
-    
-        {{-- 翌日リンク --}}
         <a class="link-next" href="{{ route('admins.attendances.index', ['date' => $nextDate]) }}">
             <span class="link-next__text">翌日</span>
             <img class="link-next__img" src="{{ asset('images/arrow-right.png') }}" alt="翌日">
         </a>
     </div>
-    
-    {{-- 勤怠一覧テーブル --}}
     <table>
         <thead>
             <tr>
@@ -65,6 +62,5 @@
             @endforeach
         </tbody>
     </table>
-
 </div>
 @endsection

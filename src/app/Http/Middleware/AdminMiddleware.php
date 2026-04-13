@@ -17,10 +17,13 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->is_admin) {
+        if (!Auth::check()) {
+            return redirect('/login');
+        }
+        if (Auth::user()->is_admin) {
             return $next($request);
         }
-
-        return redirect('/login')->with('error', '管理者権限が必要です');
+        
+        abort(403, '管理者権限が必要です');
     }
 }

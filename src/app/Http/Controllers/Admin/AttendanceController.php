@@ -8,7 +8,6 @@ use App\Models\AttendanceRequest;
 use App\Models\User;
 use App\Http\Requests\AttendanceCorrectRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -98,17 +97,6 @@ class AttendanceController extends Controller
 
         return view('admins.users.show', compact('user', 'attendances', 'displayDate', 'prevMonth', 'nextMonth'));
     }
-
-    // public function requestsIndex(Request $request)
-    // {
-    //     $currentTab = $request->query('tab', 'pending');
-    //     $requests = AttendanceRequest::with('user', 'attendance')
-    //         ->where('status', $currentTab)
-    //         ->orderBy('created_at', 'desc')
-    //         ->get();
-
-    //     return view('admins.requests.index', compact('requests', 'currentTab'));
-    // }
 
     public function requestsShow($id)
     {

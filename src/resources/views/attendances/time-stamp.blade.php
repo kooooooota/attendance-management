@@ -8,21 +8,17 @@
 <div class="attendance-container">
     <div class="attendance-container__status">
         @if($alreadyFinishedToday)
-        <p>退勤済</p>
+            <p>退勤済</p>
         @elseif(!$attendance)
-        <p class="status-outside">勤務外</p>
+            <p class="status-outside">勤務外</p>
         @elseif(!$attendance->punched_out_at && !$isBreaking)
-        <p>出勤中</p>
+            <p>出勤中</p>
         @elseif($isBreaking)
-        <p>休憩中</p>
-        
+            <p>休憩中</p>
         @endif
     </div>
-    <!-- リアルタイム時計 -->
-         <p class="attendance-container__date">{{ \Carbon\Carbon::now()->isoFormat('YYYY年M月D日(ddd)') }}</p>
-         <div class="attendance-container__time" id="clock">{{ Carbon\Carbon::now()->format('H:i') }}</div>
-
-    <!-- 打刻フォーム -->
+        <p class="attendance-container__date">{{ \Carbon\Carbon::now()->isoFormat('YYYY年M月D日(ddd)') }}</p>
+        <div class="attendance-container__time" id="clock">{{ Carbon\Carbon::now()->format('H:i') }}</div>
     <form class="attendance-container__btn" action="{{ route('attendances.punch') }}" method="post">
         @csrf
         @if(!$attendance && !$alreadyFinishedToday)
@@ -38,7 +34,6 @@
         @if(session('error')) <p class="alert-error">{{ session('error') }}</p> @endif
     </form>
 </div>
-
 <script>
     function updateClock() {
         const now = new Date();

@@ -42,6 +42,11 @@ php artisan migrate
 ```bash
 php artisan db:seed  
 ```
+8. 権限の設定  
+権限エラーが発生する場合は、開発環境に限り一時的に以下のコマンドで対応してください。  
+```bash
+sudo chmod -R 777 src/*
+```
 ## テスト用ログイン情報
 以下の情報で管理者、一般ユーザーそれぞれログイン可能です。  
 (シーディング実行後に有効になります。)  
@@ -98,8 +103,8 @@ php artisan config:clear
 php artisan migrate --env=testing
 ```
 8. テスト実行  
-- 全テスト実行: `vendor/bin/phpunit tests/Feature`  
-- 特定のテスト: `vendor/bin/phpunit tests/Feature/テストファイル名`
+- 全テスト実行: ```vendor/bin/phpunit tests/Feature```  
+- 特定のテスト: ```vendor/bin/phpunit tests/Feature/テストファイル名```
 ## 使用技術
 - PHP8.3.0
 - Laravel8.83.27
